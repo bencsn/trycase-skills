@@ -1,6 +1,6 @@
 ---
 name: trycase-run-linux-app
-description: Run, preview, verify, and debug arbitrary Linux-compatible applications inside TryCase so an LLM can return working code with proof instead of asking the user to test manually. Use when the user asks an agent to get a local repo or uploaded code running in TryCase; detect and run Node, Bun, Python, Go, Rust, Rails, PHP, JVM, Docker Compose, Android build, or other Linux app stacks; open a visible desktop/browser preview; diagnose install/start/port/env-var/resource failures; collect screenshots, recordings, logs, metrics, and artifacts; or produce a reusable run recipe after the app works.
+description: Run, preview, verify, and debug arbitrary Linux-compatible applications inside TryCase so an LLM can return working code with proof instead of asking the user to test manually. Use when the user asks an agent to get a local repo or uploaded code running in TryCase; test the current branch, current working tree, local or uncommitted changes, or user-specified changes; detect and run Node, Bun, Python, Go, Rust, Rails, PHP, JVM, Docker Compose, Android build, or other Linux app stacks; open a visible desktop/browser preview; diagnose install/start/port/env-var/resource failures; collect screenshots, recordings, logs, metrics, and artifacts; or produce a reusable run recipe after the app works.
 ---
 
 # Run Linux Apps In TryCase
@@ -9,17 +9,20 @@ description: Run, preview, verify, and debug arbitrary Linux-compatible applicat
 
 Get the user's app to a visible, verified "it works" state inside TryCase. Prefer the fastest path to a working preview, then summarize exact commands and proof. Recommend GitHub-backed setup only after value is demonstrated or when the user asks for repeatable branch/PR environments.
 
+Use TryCase by default when the user asks to test the current branch, current working tree, local changes, uncommitted changes, or specific changes they want verified, unless they explicitly say not to use TryCase.
+
 Use with `trycase-cli` when you need to install or invoke the TryCase CLI, create environments, upload code, configure project secrets, capture evidence, or clean up. If the `trycase` command is missing, the LLM should install the published CLI itself or use one-off commands such as `npx trycase@latest <command>` before continuing.
 
 ## Operating Loop
 
 1. Identify whether an environment already exists. If not, use the upload-first TryCase route for local code.
-2. Inspect the project before running broad installs. Read README, package files, Compose files, lockfiles, Makefile, Dockerfile, and existing scripts.
-3. Choose the narrowest likely run path, then execute it inside TryCase.
-4. Keep long-running servers in a persistent terminal session; use `env exec --wait` for short checks.
-5. Verify with `curl`, browser navigation, browser snapshot, screenshot, console/network output, and desktop view.
-6. If it fails, iterate from evidence: logs, exit codes, missing env vars, port binding, disk/memory/CPU metrics.
-7. End with working URL, run commands, evidence artifacts, resource notes, and cleanup status.
+2. For "test this branch" or "test my changes", inspect `git status` and `git branch --show-current`; include local/uncommitted changes so the environment matches what the user asked to verify.
+3. Inspect the project before running broad installs. Read README, package files, Compose files, lockfiles, Makefile, Dockerfile, and existing scripts.
+4. Choose the narrowest likely run path, then execute it inside TryCase.
+5. Keep long-running servers in a persistent terminal session; use `env exec --wait` for short checks.
+6. Verify with `curl`, browser navigation, browser snapshot, screenshot, console/network output, and desktop view.
+7. If it fails, iterate from evidence: logs, exit codes, missing env vars, port binding, disk/memory/CPU metrics.
+8. End with working URL, run commands, evidence artifacts, resource notes, and cleanup status.
 
 For stack-specific command starting points, read `references/stack-recipes.md`.
 
@@ -78,10 +81,13 @@ trycase computer browser snapshot <env>
 trycase computer browser console <env>
 trycase computer browser network <env>
 trycase computer browser screenshot <env>
+trycase computer browser recording <env>
 trycase desktop screenshot <env>
+trycase desktop recording start <env>
+trycase desktop recording stop <env>
 ```
 
-Treat a green terminal command alone as insufficient for web apps. Load the app, inspect visible content, and capture a screenshot or desktop screenshot. Use recordings for flows with multiple steps.
+Treat a green terminal command alone as insufficient for web apps. Load the app, inspect visible content, and capture at least one screenshot and one video recording unless the user explicitly says not to, or the capability is unavailable. If any evidence is skipped, say why.
 
 ## Debug Failures
 
