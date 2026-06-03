@@ -13,16 +13,10 @@ These skills teach coding agents to:
 
 ## Install
 
-For Codex:
+For Codex and Claude Code:
 
 ```bash
-npx skills add bencsn/trycase-skills --skill trycase-cli --skill trycase-run-linux-app -g -a codex
-```
-
-For Claude Code:
-
-```bash
-npx skills add bencsn/trycase-skills --skill trycase-cli --skill trycase-run-linux-app -g -a claude-code
+npx skills add bencsn/trycase-skills --skill trycase-cli --skill trycase-run-linux-app -g -a codex -a claude-code
 ```
 
 List available skills:
