@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run Linux App in TryCase"
+  short_description: "Run and debug Linux apps inside TryCase"
+  default_prompt: "Use $trycase-run-linux-app to get this app running in TryCase and verify it works."

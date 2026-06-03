@@ -1,0 +1,4 @@
+interface:
+  display_name: "TryCase CLI"
+  short_description: "Operate TryCase cloud computers from the CLI"
+  default_prompt: "Use $trycase-cli to run this project in a TryCase cloud computer."
