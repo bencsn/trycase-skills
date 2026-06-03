@@ -1,6 +1,6 @@
 ---
 name: trycase-cli
-description: Operate TryCase from the CLI for disposable Linux cloud computers used by LLMs to run, verify, and capture proof for user code. Use when the user asks an agent to run, preview, test, debug, or inspect code in TryCase; upload a local directory to a VM; open or control a TryCase desktop; capture screenshots, recordings, logs, artifacts, metrics, or browser evidence; configure project secrets; connect GitHub after an initial preview; clean up billable environments; or use commands such as trycase login, env, project, fs, terminal, desktop, computer, artifact, billing, or cleanup.
+description: Operate TryCase from the CLI for disposable Linux cloud computers used by LLMs to run, verify, and capture proof for user code. Use when the user asks an agent to run, preview, test, debug, or inspect code in TryCase; upload a local directory to an environment; open or control a TryCase desktop; capture screenshots, recordings, logs, artifacts, metrics, or browser evidence; configure project secrets; connect GitHub after an initial preview; clean up billable environments; or use commands such as trycase login, env, project, fs, terminal, desktop, computer, artifact, billing, or cleanup.
 ---
 
 # TryCase CLI

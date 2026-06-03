@@ -15,7 +15,7 @@ npm install && npm run dev
 yarn install && yarn dev
 ```
 
-If the dev server binds only to localhost inside the VM, that is fine for TryCase browser checks. If the app needs external access from the visible desktop/browser, bind to `0.0.0.0` when the framework supports it.
+If the dev server binds only to localhost inside the environment, that is fine for TryCase browser checks. If the app needs external access from the visible desktop/browser, bind to `0.0.0.0` when the framework supports it.
 
 ## Docker Compose
 
