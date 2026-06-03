@@ -11,6 +11,17 @@ Use TryCase as a private, disposable Linux computer where an LLM can run the use
 
 Do not invent `trycase start`; use the command surfaces below until a first-class start command exists.
 
+## CLI Availability
+
+Before running TryCase commands, check whether the published CLI is available:
+
+```bash
+command -v trycase >/dev/null 2>&1 || npm install -g trycase
+trycase --version
+```
+
+If `npm install -g trycase` is not allowed in the current shell, do not ask the user to install it manually. Use one-off commands such as `npx trycase@latest <command>`, `bunx trycase@latest <command>`, or `pnpm dlx trycase@latest <command>` and tell the user which runner you are using. The LLM should install or invoke the CLI itself before continuing.
+
 ## Route Choice
 
 Prefer routes in this order unless the user asks otherwise:

@@ -9,7 +9,7 @@ description: Run, preview, verify, and debug arbitrary Linux-compatible applicat
 
 Get the user's app to a visible, verified "it works" state inside TryCase. Prefer the fastest path to a working preview, then summarize exact commands and proof. Recommend GitHub-backed setup only after value is demonstrated or when the user asks for repeatable branch/PR environments.
 
-Use with `trycase-cli` when you need to create environments, upload code, configure project secrets, capture evidence, or clean up.
+Use with `trycase-cli` when you need to install or invoke the TryCase CLI, create environments, upload code, configure project secrets, capture evidence, or clean up. If the `trycase` command is missing, the LLM should install the published CLI itself or use one-off commands such as `npx trycase@latest <command>` before continuing.
 
 ## Operating Loop
 
