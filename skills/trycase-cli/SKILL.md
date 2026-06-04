@@ -15,14 +15,18 @@ Do not invent `trycase start`; use the command surfaces below until a first-clas
 
 ## CLI Availability
 
-Before running TryCase commands, check whether the published CLI is available:
+Before running TryCase commands, check whether the published CLI is available and current:
 
 ```bash
-command -v trycase >/dev/null 2>&1 || npm install -g trycase
+latest="$(npm view trycase version)"
+current="$(trycase --version 2>/dev/null | awk '{print $NF}' || true)"
+if [ -z "$current" ] || [ "$current" != "$latest" ]; then
+  npm install -g trycase@latest
+fi
 trycase --version
 ```
 
-If `npm install -g trycase` is not allowed in the current shell, do not ask the user to install it manually. Use one-off commands such as `npx trycase@latest <command>`, `bunx trycase@latest <command>`, or `pnpm dlx trycase@latest <command>` and tell the user which runner you are using. The LLM should install or invoke the CLI itself before continuing.
+If checking npm or running `npm install -g trycase@latest` is not allowed in the current shell, do not ask the user to update it manually. Use one-off latest commands such as `npx trycase@latest <command>`, `bunx trycase@latest <command>`, or `pnpm dlx trycase@latest <command>` and tell the user which runner you are using. The LLM should install, update, or invoke the latest CLI itself before continuing.
 
 ## Route Choice
 

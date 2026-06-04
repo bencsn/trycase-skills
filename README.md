@@ -27,6 +27,12 @@ For any agent that supports the `skills` CLI:
 npx skills add bencsn/trycase-skills --skill trycase-cli --skill trycase-run-linux-app -g
 ```
 
+Already installed? Update them with:
+
+```bash
+npx skills update -g trycase-cli trycase-run-linux-app
+```
+
 List available skills:
 
 ```bash

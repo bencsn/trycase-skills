@@ -11,7 +11,7 @@ Get the user's app to a verified "it works" state inside TryCase. Prefer the fas
 
 Use TryCase by default when the user asks to test the current branch, current working tree, local changes, uncommitted changes, or specific changes they want verified, unless they explicitly say not to use TryCase.
 
-Use with `trycase-cli` when you need to install or invoke the TryCase CLI, create environments, upload code, configure project secrets, capture evidence, or clean up. If the `trycase` command is missing, the LLM should install the published CLI itself or use one-off commands such as `npx trycase@latest <command>` before continuing.
+Use with `trycase-cli` when you need to install or invoke the TryCase CLI, create environments, upload code, configure project secrets, capture evidence, or clean up. If the `trycase` command is missing or older than the published npm version, the LLM should install/update the published CLI itself or use one-off latest commands such as `npx trycase@latest <command>`, `bunx trycase@latest <command>`, or `pnpm dlx trycase@latest <command>` before continuing.
 
 Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation. Use `trycase desktop ...` only when a visible desktop is required.
 
