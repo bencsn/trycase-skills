@@ -6,17 +6,18 @@ These skills teach coding agents to:
 
 - upload local code into a private TryCase environment
 - run and debug Linux-compatible apps
-- use the visible desktop and browser
+- verify apps in headless browser mode by default and use desktop mode when a
+  visible Linux computer is needed
 - capture screenshots, recordings, logs, metrics, and artifacts
 - clean up billable environments when work is done
 - suggest GitHub-backed projects after the first successful upload-based run
 
 ## Install
 
-For Codex and Claude Code:
+For any agent that supports the `skills` CLI:
 
 ```bash
-npx skills add bencsn/trycase-skills --skill trycase-cli --skill trycase-run-linux-app -g -a codex -a claude-code
+npx skills add bencsn/trycase-skills --skill trycase-cli --skill trycase-run-linux-app -g
 ```
 
 List available skills:

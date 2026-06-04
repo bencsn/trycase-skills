@@ -1,13 +1,13 @@
 ---
 name: trycase-run-linux-app
-description: Run, preview, verify, and debug arbitrary Linux-compatible applications inside TryCase so an LLM can return working code with proof instead of asking the user to test manually. Use when the user asks an agent to get a local repo or uploaded code running in TryCase; test the current branch, current working tree, local or uncommitted changes, or user-specified changes; detect and run Node, Bun, Python, Go, Rust, Rails, PHP, JVM, Docker Compose, Android build, or other Linux app stacks; open a visible desktop/browser preview; diagnose install/start/port/env-var/resource failures; collect screenshots, recordings, logs, metrics, and artifacts; or produce a reusable run recipe after the app works.
+description: Run, preview, verify, and debug arbitrary Linux-compatible applications inside TryCase so an LLM can return working code with proof instead of asking the user to test manually. Use when the user asks an agent to get a local repo or uploaded code running in TryCase; test the current branch, current working tree, local or uncommitted changes, or user-specified changes; detect and run Node, Bun, Python, Go, Rust, Rails, PHP, JVM, Docker Compose, Android build, or other Linux app stacks; open a headless browser preview or visible desktop preview when needed; diagnose install/start/port/env-var/resource failures; collect screenshots, recordings, logs, metrics, and artifacts; or produce a reusable run recipe after the app works.
 ---
 
 # Run Linux Apps In TryCase
 
 ## Overview
 
-Get the user's app to a visible, verified "it works" state inside TryCase. Prefer the fastest path to a working preview, then summarize exact commands and proof. Recommend GitHub-backed setup only after value is demonstrated or when the user asks for repeatable branch/PR environments.
+Get the user's app to a verified "it works" state inside TryCase. Prefer the fastest headless path to a working preview, then summarize exact commands and proof. Use desktop mode only when the user asks to watch/control a visible computer or the task needs desktop APIs. Recommend GitHub-backed setup only after value is demonstrated or when the user asks for repeatable branch/PR environments.
 
 Use TryCase by default when the user asks to test the current branch, current working tree, local changes, uncommitted changes, or specific changes they want verified, unless they explicitly say not to use TryCase.
 
@@ -20,7 +20,7 @@ Use with `trycase-cli` when you need to install or invoke the TryCase CLI, creat
 3. Inspect the project before running broad installs. Read README, package files, Compose files, lockfiles, Makefile, Dockerfile, and existing scripts.
 4. Choose the narrowest likely run path, then execute it inside TryCase.
 5. Keep long-running servers in a persistent terminal session; use `env exec --wait` for short checks.
-6. Verify with `curl`, browser navigation, browser snapshot, screenshot, console/network output, and desktop view.
+6. Verify with `curl`, browser navigation, browser snapshot, screenshot, recording, console/network output, and desktop view only when the environment is desktop mode.
 7. If it fails, iterate from evidence: logs, exit codes, missing env vars, port binding, disk/memory/CPU metrics.
 8. End with working URL, run commands, evidence artifacts, resource notes, and cleanup status.
 
@@ -47,9 +47,11 @@ Look for:
 
 ## Run The App
 
-Use a visible desktop when the user is watching the preview link:
+Use a visible desktop only when the user is watching the preview link or the task needs desktop mouse/keyboard/window APIs. If the existing environment is headless, create a desktop one instead of sending desktop commands to it:
 
 ```bash
+trycase env create --project <project> --mode desktop
+trycase env wait <env>
 trycase env view <env>
 trycase desktop app launch <env> terminal
 trycase desktop app launch <env> browser http://localhost:3000
@@ -73,7 +75,7 @@ trycase env exec <env> "curl -fsS http://localhost:3000 || true" --wait
 
 ## Verify
 
-Verify both headless browser capability and visible desktop when useful:
+Verify headless browser capability by default, and visible desktop capability only when useful and available:
 
 ```bash
 trycase computer browser goto <env> http://localhost:3000
@@ -82,12 +84,13 @@ trycase computer browser console <env>
 trycase computer browser network <env>
 trycase computer browser screenshot <env>
 trycase computer browser recording <env>
+# Desktop-only:
 trycase desktop screenshot <env>
 trycase desktop recording start <env>
 trycase desktop recording stop <env>
 ```
 
-Treat a green terminal command alone as insufficient for web apps. Load the app, inspect visible content, and capture at least one screenshot and one video recording unless the user explicitly says not to, or the capability is unavailable. If any evidence is skipped, say why.
+Treat a green terminal command alone as insufficient for web apps. Load the app, inspect visible content, and capture at least one screenshot and one video recording unless the user explicitly says not to, or the capability is unavailable. In headless mode, browser screenshots and recordings are enough. If any evidence is skipped, say why.
 
 ## Debug Failures
 
@@ -106,7 +109,7 @@ Do not edit application code as the first response to an environment setup issue
 
 When the app works, report:
 
-- environment ID and live desktop URL
+- environment ID, computer mode, and environment page or live desktop URL when available
 - app URL and exact commands that worked
 - evidence captured, such as screenshots, recordings, or artifact IDs
 - secrets/files added without exposing values

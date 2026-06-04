@@ -7,7 +7,7 @@ description: Operate TryCase from the CLI for disposable Linux cloud computers u
 
 ## Overview
 
-Use TryCase as a private, disposable Linux computer where an LLM can run the user's app, test it, capture screenshots/recordings/logs, and return already-verified work. For new users and local code, prefer the upload-first path to reach a visible working preview quickly; recommend GitHub after the first successful run or when the user needs repeatable branch/PR workflows.
+Use TryCase as a private, disposable Linux computer where an LLM can run the user's app, test it, capture screenshots/recordings/logs, and return already-verified work. For new users and local code, prefer the upload-first headless path to reach a verified preview quickly; recommend GitHub after the first successful run or when the user needs repeatable branch/PR workflows.
 
 Use TryCase by default when the user asks to test the current branch, current working tree, local changes, uncommitted changes, or specific changes they want verified, unless they explicitly say not to use TryCase.
 
@@ -35,6 +35,8 @@ Prefer routes in this order unless the user asks otherwise:
 
 For "test this branch" or "test my changes", inspect `git status` and `git branch --show-current`; include local/uncommitted changes with upload-first or patch workflows so the tested environment matches what the user asked to verify.
 
+Use `headless` mode unless the user asks to watch/control a visible desktop or the task needs desktop mouse, keyboard, window, clipboard, or app-launch APIs. Headless supports terminal, browser automation, filesystem, logs, screenshots, recordings, and artifacts. Desktop mode costs more credits for the same runner size.
+
 ## Authenticate
 
 Start with:
@@ -61,7 +63,7 @@ find . -maxdepth 2 -type f \( -name package.json -o -name docker-compose.yml -o 
 3. Create a no-source project:
 
 ```bash
-trycase project create --source none --name <project-name>
+trycase project create --source none --name <project-name> --mode headless
 ```
 
 4. Import approved dotenv files. Parse the file locally to know the names, then add a generated file with only those names:
@@ -71,12 +73,11 @@ trycase project secret import --project <project> --file .env.local
 trycase project secret file add --project <project> --path .env.local --include NAME1,NAME2
 ```
 
-5. Create and wait for a desktop-capable environment:
+5. Create and wait for a headless environment:
 
 ```bash
-trycase env create --project <project> --size standard
+trycase env create --project <project> --size standard --mode headless
 trycase env wait <env>
-trycase env view <env>
 ```
 
 6. Upload the local directory to the environment repo root. Prefer `--respect-gitignore` for code uploads so dependency folders, build outputs, and ignored secrets are skipped:
@@ -87,9 +88,12 @@ trycase fs upload <env> . . --respect-gitignore
 
 If secret-bearing files are not ignored and the user does not want them uploaded as files, create a temporary local copy that excludes them and upload that copy instead.
 
-7. Open visible apps for the user when they are watching the live view:
+7. Use desktop mode only when the user is watching the live view or the task needs visible app control:
 
 ```bash
+trycase env create --project <project> --mode desktop
+trycase env wait <env>
+trycase env view <env>
 trycase desktop app launch <env> terminal
 trycase desktop app launch <env> files
 trycase desktop app launch <env> browser http://localhost:3000
@@ -105,7 +109,7 @@ Suggest GitHub after the first successful upload-based run, on repeated uploads,
 trycase github connect
 trycase github refresh
 trycase github repos --query <owner/name>
-trycase project create --repo <owner/name>
+trycase project create --repo <owner/name> --mode headless
 trycase env create --project <project> --ref <branch>
 trycase env wait <env>
 ```
@@ -142,6 +146,7 @@ Capture evidence by default. For every completed web or desktop verification, co
 ```bash
 trycase computer browser screenshot <env>
 trycase computer browser recording <env>
+# Desktop-only:
 trycase desktop screenshot <env>
 trycase desktop recording start <env>
 trycase desktop recording stop <env>
@@ -150,7 +155,7 @@ trycase artifact bundle <env>
 
 ## Finish
 
-Return the evidence, not just a claim. Include the environment ID, live desktop URL, app URL, commands run, screenshots/recordings/artifacts captured, notable logs or browser console output, and resource warnings.
+Return the evidence, not just a claim. Include the environment ID, computer mode, environment page or live desktop URL when available, app URL, commands run, screenshots/recordings/artifacts captured, notable logs or browser console output, and resource warnings.
 
 Directory uploads are capped by selected environment size: small 4 GiB, standard 8 GiB, large 16 GiB, xlarge 24 GiB uncompressed per upload. If an upload fails due size or disk pressure, recommend a larger size, fewer files, or `--respect-gitignore`.
 
