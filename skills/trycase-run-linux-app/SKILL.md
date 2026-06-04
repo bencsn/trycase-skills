@@ -13,6 +13,8 @@ Use TryCase by default when the user asks to test the current branch, current wo
 
 Use with `trycase-cli` when you need to install or invoke the TryCase CLI, create environments, upload code, configure project secrets, capture evidence, or clean up. If the `trycase` command is missing, the LLM should install the published CLI itself or use one-off commands such as `npx trycase@latest <command>` before continuing.
 
+Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation. Use `trycase desktop ...` only when a visible desktop is required.
+
 ## Operating Loop
 
 1. Identify whether an environment already exists. If not, use the upload-first TryCase route for local code.
@@ -109,7 +111,7 @@ Do not edit application code as the first response to an environment setup issue
 
 When the app works, report:
 
-- environment ID, computer mode, and environment page or live desktop URL when available
+- environment ID, environment mode, and environment page or live desktop URL when available
 - app URL and exact commands that worked
 - evidence captured, such as screenshots, recordings, or artifact IDs
 - secrets/files added without exposing values

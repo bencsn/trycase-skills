@@ -12,6 +12,13 @@ These skills teach coding agents to:
 - clean up billable environments when work is done
 - suggest GitHub-backed projects after the first successful upload-based run
 
+CLI vocabulary the skills follow:
+
+- `--mode headless` is the default route for agent verification.
+- `--mode desktop` is only for visible desktop control.
+- There is no `--mode computer`; `trycase computer ...` is a command namespace
+  for status and browser automation.
+
 ## Install
 
 For any agent that supports the `skills` CLI:

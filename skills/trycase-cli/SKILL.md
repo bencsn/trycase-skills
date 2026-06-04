@@ -37,6 +37,8 @@ For "test this branch" or "test my changes", inspect `git status` and `git branc
 
 Use `headless` mode unless the user asks to watch/control a visible desktop or the task needs desktop mouse, keyboard, window, clipboard, or app-launch APIs. Headless supports terminal, browser automation, filesystem, logs, screenshots, recordings, and artifacts. Desktop mode costs more credits for the same runner size.
 
+Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation that works across supported environment modes. Use `trycase desktop ...` only for visible desktop commands.
+
 ## Authenticate
 
 Start with:
@@ -155,7 +157,7 @@ trycase artifact bundle <env>
 
 ## Finish
 
-Return the evidence, not just a claim. Include the environment ID, computer mode, environment page or live desktop URL when available, app URL, commands run, screenshots/recordings/artifacts captured, notable logs or browser console output, and resource warnings.
+Return the evidence, not just a claim. Include the environment ID, environment mode, environment page or live desktop URL when available, app URL, commands run, screenshots/recordings/artifacts captured, notable logs or browser console output, and resource warnings.
 
 Directory uploads are capped by selected environment size: small 4 GiB, standard 8 GiB, large 16 GiB, xlarge 24 GiB uncompressed per upload. If an upload fails due size or disk pressure, recommend a larger size, fewer files, or `--respect-gitignore`.
 
