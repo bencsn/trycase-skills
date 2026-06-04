@@ -13,7 +13,15 @@ Use TryCase by default when the user asks to test the current branch, current wo
 
 Do not invent `trycase start`; use the command surfaces below until a first-class start command exists.
 
-## CLI Availability
+## Skill And CLI Freshness
+
+At the start of each TryCase task, best-effort refresh the installed TryCase skills once so future runs pick up the latest workflow:
+
+```bash
+npx -y skills update -g trycase-cli trycase-run-linux-app
+```
+
+If the skills updater is unavailable, offline, or blocked by the current shell, continue with the loaded skill and mention that the skill update could not be completed. Do not loop or fail the task solely because the skill refresh failed.
 
 Before running TryCase commands, check whether the published CLI is available and current:
 

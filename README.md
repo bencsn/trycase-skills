@@ -33,6 +33,8 @@ Already installed? Update them with:
 npx skills update -g trycase-cli trycase-run-linux-app
 ```
 
+The skills also tell agents to best-effort refresh the installed TryCase skills at the start of each TryCase task.
+
 List available skills:
 
 ```bash
