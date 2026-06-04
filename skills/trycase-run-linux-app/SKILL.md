@@ -15,6 +15,8 @@ Use with `trycase-cli` when you need to install or invoke the TryCase CLI, creat
 
 Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation. Use `trycase desktop ...` only when a visible desktop is required.
 
+Start with `nano` for headless app verification. Retry with `--size small`, `--size standard`, `--size large`, or `--size xlarge` only when installs, builds, tests, metrics, or disk/upload limits show the app needs more. Use `standard` first for Docker Compose or desktop environments.
+
 ## Operating Loop
 
 1. Identify whether an environment already exists. If not, use the upload-first TryCase route for local code.

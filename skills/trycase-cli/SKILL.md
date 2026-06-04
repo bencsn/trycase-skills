@@ -37,6 +37,8 @@ For "test this branch" or "test my changes", inspect `git status` and `git branc
 
 Use `headless` mode unless the user asks to watch/control a visible desktop or the task needs desktop mouse, keyboard, window, clipboard, or app-launch APIs. Headless supports terminal, browser automation, filesystem, logs, screenshots, recordings, and artifacts. Desktop mode costs more credits for the same runner size.
 
+Start with `nano` for headless environments. Retry with `--size small`, `--size standard`, `--size large`, or `--size xlarge` only when installs, builds, tests, metrics, or disk/upload limits show the app needs more. Use `standard` first for desktop or Docker Compose environments.
+
 Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation that works across supported environment modes. Use `trycase desktop ...` only for visible desktop commands.
 
 ## Authenticate
@@ -78,7 +80,7 @@ trycase project secret file add --project <project> --path .env.local --include 
 5. Create and wait for a headless environment:
 
 ```bash
-trycase env create --project <project> --size standard --mode headless
+trycase env create --project <project> --mode headless
 trycase env wait <env>
 ```
 
@@ -159,7 +161,7 @@ trycase artifact bundle <env>
 
 Return the evidence, not just a claim. Include the environment ID, environment mode, environment page or live desktop URL when available, app URL, commands run, screenshots/recordings/artifacts captured, notable logs or browser console output, and resource warnings.
 
-Directory uploads are capped by selected environment size: small 4 GiB, standard 8 GiB, large 16 GiB, xlarge 24 GiB uncompressed per upload. If an upload fails due size or disk pressure, recommend a larger size, fewer files, or `--respect-gitignore`.
+Directory uploads are capped by selected environment size: nano 2 GiB, small 4 GiB, standard 8 GiB, large 16 GiB, xlarge 24 GiB uncompressed per upload. If an upload fails due size or disk pressure, recommend a larger size, fewer files, or `--respect-gitignore`.
 
 Always destroy environments when work is done:
 
