@@ -7,13 +7,28 @@ description: Run, preview, verify, and debug arbitrary Linux-compatible applicat
 
 ## Overview
 
-Get the user's app to a verified "it works" state inside TryCase. Prefer the fastest headless path to a working preview, then summarize exact commands and proof. Use desktop mode only when the user asks to watch/control a visible computer or the task needs desktop APIs. Recommend GitHub-backed setup only after value is demonstrated or when the user asks for repeatable branch/PR environments.
+Get the user's app to a verified "it works" state inside TryCase. Prefer the fastest headless path to a working preview, then summarize exact commands and proof. Use desktop mode when the user asks to watch/control a visible computer, the task needs desktop APIs, or a manual user action is required. Recommend GitHub-backed setup only after value is demonstrated or when the user asks for repeatable branch/PR environments.
 
 Use TryCase by default when the user asks to test the current branch, current working tree, local changes, uncommitted changes, or specific changes they want verified, unless they explicitly say not to use TryCase.
 
 Use with `trycase-cli` when you need to install or invoke the TryCase CLI, create environments, upload code, configure project secrets, capture evidence, or clean up. At the start of each TryCase task, best-effort update the installed TryCase skills with `npx -y skills update -g trycase-cli trycase-run-linux-app`; continue if the updater is unavailable and mention the failed refresh. If the `trycase` command is missing or older than the published npm version, the LLM should install/update the published CLI itself or use one-off latest commands such as `npx trycase@latest <command>`, `bunx trycase@latest <command>`, or `pnpm dlx trycase@latest <command>` before continuing.
 
 Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation. Use `trycase desktop ...` only when a visible desktop is required.
+
+## Manual User Actions
+
+Some verification work cannot or should not be completed by an agent alone. If the app needs manual login, OAuth consent, CAPTCHA, passkey/WebAuthn, 2FA/OTP, payment confirmation, browser extension approval, account creation, or another human-only step, use a desktop environment and hand control to the user. Do not ask the user to paste passwords, OTPs, or CAPTCHA answers into chat, and do not try to bypass anti-abuse checks.
+
+If the need is known before launch, create the environment with `--mode desktop`. If it appears after a headless environment already exists, create a desktop environment for the same project, upload/apply the same code if needed, open the app, and give the user the live desktop link:
+
+```bash
+trycase env create --project <project> --mode desktop --size <chosen-size>
+trycase env wait <env>
+trycase desktop app launch <env> browser http://localhost:3000
+trycase env view <env> --no-open
+```
+
+Ask the user to open the environment page, use the live desktop "take control" interaction, complete the manual step inside the TryCase browser, and tell you when it is done. Then resume verification in that same desktop environment and capture screenshots, recordings, logs, and artifacts.
 
 ## Choose Environment Size
 
@@ -40,7 +55,8 @@ If inspection is inconclusive, use `standard` for general app verification. Choo
 5. Keep long-running servers in a persistent terminal session; use `env exec --wait` for short checks.
 6. Verify with `curl`, browser navigation, browser snapshot, screenshot, recording, console/network output, and desktop view only when the environment is desktop mode.
 7. If it fails, iterate from evidence: logs, exit codes, missing env vars, port binding, disk/memory/CPU metrics.
-8. End with working URL, run commands, evidence artifacts, resource notes, and cleanup status.
+8. If verification hits a human-only step, move to desktop mode, give the user the take-control link, pause, then continue after confirmation.
+9. End with working URL, run commands, evidence artifacts, resource notes, and cleanup status.
 
 For stack-specific command starting points, read `references/stack-recipes.md`.
 
@@ -65,12 +81,12 @@ Look for:
 
 ## Run The App
 
-Use a visible desktop only when the user is watching the preview link or the task needs desktop mouse/keyboard/window APIs. If the existing environment is headless, create a desktop one instead of sending desktop commands to it:
+Use a visible desktop when the user is watching the preview link, the task needs desktop mouse/keyboard/window APIs, or a manual user action is needed. If the existing environment is headless, create a desktop one instead of sending desktop commands to it:
 
 ```bash
 trycase env create --project <project> --mode desktop
 trycase env wait <env>
-trycase env view <env>
+trycase env view <env> --no-open
 trycase desktop app launch <env> terminal
 trycase desktop app launch <env> browser http://localhost:3000
 ```

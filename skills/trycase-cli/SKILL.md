@@ -47,7 +47,9 @@ Prefer routes in this order unless the user asks otherwise:
 
 For "test this branch" or "test my changes", inspect `git status` and `git branch --show-current`; include local/uncommitted changes with upload-first or patch workflows so the tested environment matches what the user asked to verify.
 
-Use `headless` mode unless the user asks to watch/control a visible desktop or the task needs desktop mouse, keyboard, window, clipboard, or app-launch APIs. Headless supports terminal, browser automation, filesystem, logs, screenshots, recordings, and artifacts. Desktop mode costs more credits for the same runner size.
+Use `headless` mode unless the user asks to watch/control a visible desktop, the task needs desktop mouse, keyboard, window, clipboard, or app-launch APIs, or a manual user action is likely. Headless supports terminal, browser automation, filesystem, logs, screenshots, recordings, and artifacts. Desktop mode costs more credits for the same runner size.
+
+Use `desktop` mode for any flow that needs real user interaction, including manual login, OAuth consent, CAPTCHA, passkey/WebAuthn, 2FA/OTP, payment confirmation, browser extension approval, account creation, or anything the agent should not automate or cannot complete honestly. Do not ask the user to paste passwords, OTPs, or CAPTCHA answers into chat, and do not try to bypass anti-abuse checks. Instead, create or switch to a desktop environment, open the app there, run `trycase env view <env> --no-open`, give the user the environment page link, tell them to use the live desktop "take control" interaction to finish the step, and pause until they say it is done. After the user completes the manual step, resume verification in the same desktop environment and capture evidence.
 
 Choose the environment size before creating the project or environment. Do not default to `nano` just because the run is headless. Inspect the codebase, expected install/build/test workload, Docker usage, language runtime, repository size, and likely artifact/output size, then pass `--size <size>` explicitly. Use the smallest size that is likely to finish without memory pressure, CPU-starved builds, or disk/upload failures.
 
@@ -128,16 +130,18 @@ trycase fs upload <env> . . --respect-gitignore
 
 If secret-bearing files are not ignored and the user does not want them uploaded as files, create a temporary local copy that excludes them and upload that copy instead.
 
-7. Use desktop mode only when the user is watching the live view or the task needs visible app control:
+7. Use desktop mode when the user is watching the live view, the task needs visible app control, or a manual user action is needed:
 
 ```bash
 trycase env create --project <project> --mode desktop --size <chosen-size>
 trycase env wait <env>
-trycase env view <env>
+trycase env view <env> --no-open
 trycase desktop app launch <env> terminal
 trycase desktop app launch <env> files
 trycase desktop app launch <env> browser http://localhost:3000
 ```
+
+When the manual step is login, OAuth consent, CAPTCHA, passkey, 2FA, payment confirmation, or similar, give the user the `trycase env view` URL and ask them to take control in the live desktop. Do not continue until the user confirms the manual step is complete.
 
 Use `trycase terminal open` only for persistent CLI terminal sessions controlled by `trycase terminal write/read`; it does not open a visible terminal window in the live desktop.
 
