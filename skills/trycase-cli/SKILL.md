@@ -49,7 +49,19 @@ For "test this branch" or "test my changes", inspect `git status` and `git branc
 
 Use `headless` mode unless the user asks to watch/control a visible desktop or the task needs desktop mouse, keyboard, window, clipboard, or app-launch APIs. Headless supports terminal, browser automation, filesystem, logs, screenshots, recordings, and artifacts. Desktop mode costs more credits for the same runner size.
 
-Start with `nano` for headless environments. Retry with `--size small`, `--size standard`, `--size large`, or `--size xlarge` only when installs, builds, tests, metrics, or disk/upload limits show the app needs more. Use `standard` first for desktop or Docker Compose environments.
+Choose the environment size before creating the project or environment. Do not default to `nano` just because the run is headless. Inspect the codebase, expected install/build/test workload, Docker usage, language runtime, repository size, and likely artifact/output size, then pass `--size <size>` explicitly. Use the smallest size that is likely to finish without memory pressure, CPU-starved builds, or disk/upload failures.
+
+Size guide:
+
+| Size | Resources | Upload cap | Use when |
+| --- | --- | --- | --- |
+| `nano` | 1 vCPU, 1 GiB RAM, 10 GiB disk | 2 GiB | Tiny scripts, static sites, simple frontend checks, small docs/tools, or quick smoke tests with little install/build work. |
+| `small` | 1 vCPU, 2 GiB RAM, 20 GiB disk | 4 GiB | Small Node/Python/Go apps, lightweight package installs, simple APIs, and repos that are clearly too tight for 1 GiB RAM. |
+| `standard` | 2 vCPU, 4 GiB RAM, 40 GiB disk | 8 GiB | Unknown web apps, Next/Rails/PHP apps, moderate Rust/Go builds, Docker Compose, databases, and most visible desktop runs. |
+| `large` | 4 vCPU, 8 GiB RAM, 80 GiB disk | 16 GiB | Monorepos, heavier Docker Compose stacks, JVM/Rails/native builds, larger test suites, and workflows that produce sizable artifacts. |
+| `xlarge` | 8 vCPU, 16 GiB RAM, 120 GiB disk | 24 GiB | Largest supported Linux workloads, Android/Gradle builds, big monorepos, or cases that already exhausted `large`. |
+
+If uncertain after inspection, choose `standard` for general app verification. Move down to `small` or `nano` only when the repository and workload are clearly lightweight; move up when Docker, JVM/Android, large monorepos, native compilation, or disk-heavy fixtures are present.
 
 Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation that works across supported environment modes. Use `trycase desktop ...` only for visible desktop commands.
 
@@ -62,6 +74,18 @@ trycase doctor
 ```
 
 If the CLI is not signed in, run `trycase login` when a browser can open. In headless or remote shells, run `trycase login --no-open`, show the URL to the user, and pause until they approve it. If no workspace is selected, run `trycase workspace list` and either `trycase workspace use <workspace>` or `trycase workspace create --name <name>`.
+
+## Discover Existing Work
+
+Before creating a new environment after an interruption, a retry, or a handoff, check for active billable work and reuse it when it matches the task:
+
+```bash
+trycase env list --active --json
+trycase project list --json
+trycase project show <project> --json
+```
+
+Use `trycase env list --project <project> --limit 10` to inspect recent environments for a specific project. Preserve reusable or user-created projects unless the user asked to remove them. For temporary no-source projects created only for the current task, clean them up when the work is done.
 
 ## Upload-First Quick Preview
 
@@ -79,7 +103,7 @@ find . -maxdepth 2 -type f \( -name package.json -o -name docker-compose.yml -o 
 3. Create a no-source project:
 
 ```bash
-trycase project create --source none --name <project-name> --mode headless
+trycase project create --source none --name <project-name> --mode headless --size <chosen-size>
 ```
 
 4. Import approved dotenv files. Parse the file locally to know the names, then add a generated file with only those names:
@@ -92,7 +116,7 @@ trycase project secret file add --project <project> --path .env.local --include 
 5. Create and wait for a headless environment:
 
 ```bash
-trycase env create --project <project> --mode headless
+trycase env create --project <project> --mode headless --size <chosen-size>
 trycase env wait <env>
 ```
 
@@ -107,7 +131,7 @@ If secret-bearing files are not ignored and the user does not want them uploaded
 7. Use desktop mode only when the user is watching the live view or the task needs visible app control:
 
 ```bash
-trycase env create --project <project> --mode desktop
+trycase env create --project <project> --mode desktop --size <chosen-size>
 trycase env wait <env>
 trycase env view <env>
 trycase desktop app launch <env> terminal
@@ -125,8 +149,8 @@ Suggest GitHub after the first successful upload-based run, on repeated uploads,
 trycase github connect
 trycase github refresh
 trycase github repos --query <owner/name>
-trycase project create --repo <owner/name> --mode headless
-trycase env create --project <project> --ref <branch>
+trycase project create --repo <owner/name> --mode headless --size <chosen-size>
+trycase env create --project <project> --ref <branch> --size <chosen-size>
 trycase env wait <env>
 ```
 
@@ -183,3 +207,19 @@ trycase env status <env>
 ```
 
 Confirm the final status says `STOPPED - NOT BILLABLE`.
+
+For broad cleanup after a dogfood run or test session, list active environments first, then stop only the resources that belong to the task:
+
+```bash
+trycase env list --active --json
+trycase env destroy --all-active --json
+trycase project delete <temporary-project> --yes
+```
+
+If a temporary project still has active or queued environments that should be stopped, use:
+
+```bash
+trycase project delete <temporary-project> --yes --force
+```
+
+`project delete --force` stops active environments for that project before deleting the project from future lists. Historical environment records remain addressable by environment ID.

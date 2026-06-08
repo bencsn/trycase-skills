@@ -15,14 +15,28 @@ Use with `trycase-cli` when you need to install or invoke the TryCase CLI, creat
 
 Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation. Use `trycase desktop ...` only when a visible desktop is required.
 
-Start with `nano` for headless app verification. Retry with `--size small`, `--size standard`, `--size large`, or `--size xlarge` only when installs, builds, tests, metrics, or disk/upload limits show the app needs more. Use `standard` first for Docker Compose or desktop environments.
+## Choose Environment Size
+
+Choose the TryCase size from the codebase and workload, not from a blanket default. Inspect package files, lockfiles, README, Docker/Compose files, language runtime, build/test commands, local directory size, expected generated output, and whether the user needs desktop mode. Then pass `--size <size>` explicitly when creating the project or environment.
+
+Size guide:
+
+| Size | Resources | Upload cap | Good fit |
+| --- | --- | --- | --- |
+| `nano` | 1 vCPU, 1 GiB RAM, 10 GiB disk | 2 GiB | Tiny scripts, static pages, small docs/tools, quick CLI checks, and simple frontends with small dependency installs. |
+| `small` | 1 vCPU, 2 GiB RAM, 20 GiB disk | 4 GiB | Lightweight Node/Python/Go apps, simple APIs, modest package installs, and tasks where 1 GiB RAM is likely tight. |
+| `standard` | 2 vCPU, 4 GiB RAM, 40 GiB disk | 8 GiB | General unknown apps, Next.js/Vite apps with normal installs, Rails/PHP apps, moderate Go/Rust builds, Docker Compose, databases, and most desktop-mode checks. |
+| `large` | 4 vCPU, 8 GiB RAM, 80 GiB disk | 16 GiB | Monorepos, heavier Compose stacks, JVM/Rails/native builds, larger test suites, and disk-heavy fixtures or artifacts. |
+| `xlarge` | 8 vCPU, 16 GiB RAM, 120 GiB disk | 24 GiB | Largest supported Linux workloads, Android/Gradle builds, big monorepos, or work that already exhausted `large`. |
+
+If inspection is inconclusive, use `standard` for general app verification. Choose `nano` or `small` only when the codebase is plainly lightweight. Choose `large` or `xlarge` up front for Docker-heavy, JVM/Android, monorepo, native compilation, or disk-heavy work to avoid failed retries and wasted time.
 
 ## Operating Loop
 
-1. Identify whether an environment already exists. If not, use the upload-first TryCase route for local code.
+1. Identify whether an environment already exists. Use `trycase env list --active --json`, `trycase project list --json`, and `trycase project show <project> --json` after interruptions or handoffs before creating new billable resources. If no matching environment exists, use the upload-first TryCase route for local code.
 2. For "test this branch" or "test my changes", inspect `git status` and `git branch --show-current`; include local/uncommitted changes so the environment matches what the user asked to verify.
 3. Inspect the project before running broad installs. Read README, package files, Compose files, lockfiles, Makefile, Dockerfile, and existing scripts.
-4. Choose the narrowest likely run path, then execute it inside TryCase.
+4. Choose the smallest likely TryCase size that fits the app's memory, CPU, and disk needs, then execute it inside TryCase with `--size <chosen-size>`.
 5. Keep long-running servers in a persistent terminal session; use `env exec --wait` for short checks.
 6. Verify with `curl`, browser navigation, browser snapshot, screenshot, recording, console/network output, and desktop view only when the environment is desktop mode.
 7. If it fails, iterate from evidence: logs, exit codes, missing env vars, port binding, disk/memory/CPU metrics.
@@ -121,3 +135,11 @@ When the app works, report:
 - whether GitHub-backed setup would now save time
 
 If the task is complete, destroy the environment and confirm `STOPPED - NOT BILLABLE` unless the user explicitly wants to keep it running.
+
+For temporary no-source projects created only for the current task, delete the project after the environment is stopped:
+
+```bash
+trycase project delete <temporary-project> --yes
+```
+
+Use `trycase project delete <temporary-project> --yes --force` only when the task-owned project still has active or queued environments that should be stopped as part of cleanup. Preserve reusable or user-created projects unless the user asked to remove them.
