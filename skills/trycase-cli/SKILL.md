@@ -207,9 +207,24 @@ trycase desktop recording stop <env>
 trycase artifact bundle <env>
 ```
 
+### Present Evidence To The User
+
+Always show the captured screenshot **and** screen recording to the user directly, in a form they can view immediately. Do not make them dig through Finder or a local folder, and do not end with only a local file path like `tmp-artifacts/...`.
+
+```bash
+trycase artifact list <env> --json        # find artifact IDs for screenshots/recordings
+trycase artifact url <artifact>           # browser-viewable link for each artifact
+trycase env view <env> --no-open          # environment page that also shows captured evidence
+```
+
+- For each screenshot and recording, get a viewable link with `trycase artifact url <artifact>` and put those clickable links directly in your reply.
+- When your interface can render images, also embed the screenshot inline so the user sees it without clicking; still include the recording link (recordings usually cannot be inlined).
+- If you download artifacts locally (`trycase artifact download` / `artifact bundle --out`), the viewable link is still required — a local path alone does not count as presenting the proof.
+- Include the `trycase env view <env>` page link as a fallback so the user has a single place to view all captured evidence.
+
 ## Finish
 
-Return the evidence, not just a claim. Include the environment ID, environment mode, environment page or live desktop URL when available, app URL, commands run, screenshots/recordings/artifacts captured, notable logs or browser console output, and resource warnings.
+Return the evidence, not just a claim. Include the environment ID, environment mode, environment page or live desktop URL when available, app URL, commands run, notable logs or browser console output, and resource warnings. Present the captured screenshot and screen recording as viewable links (and inline images where supported), per "Present Evidence To The User" above — never just say evidence was captured or hand back a local file path the user has to go find.
 
 Directory uploads are capped by selected environment size: nano 2 GiB, small 4 GiB, standard 8 GiB, large 16 GiB uncompressed per upload. If an upload fails due size or disk pressure, recommend a larger size, fewer files, or `--respect-gitignore`.
 

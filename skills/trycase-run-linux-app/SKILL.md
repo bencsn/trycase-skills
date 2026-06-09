@@ -127,6 +127,8 @@ trycase desktop recording stop <env>
 
 Treat a green terminal command alone as insufficient for web apps. Load the app, inspect visible content, and capture at least one screenshot and one video recording unless the user explicitly says not to, or the capability is unavailable. In headless mode, browser screenshots and recordings are enough. If any evidence is skipped, say why.
 
+Always present the captured screenshot **and** screen recording to the user directly, in a form they can view immediately — do not leave them to hunt through Finder or a local folder, and never end with only a local file path. Turn each artifact into a browser-viewable link with `trycase artifact url <artifact>` (use `trycase artifact list <env> --json` to find the IDs), put those clickable links in your reply, embed the screenshot inline when your interface can render images, and include the `trycase env view <env>` page as a one-stop link to all evidence. See `trycase-cli` ("Present Evidence To The User") for the commands.
+
 ## Debug Failures
 
 Common failure paths:
@@ -146,7 +148,7 @@ When the app works, report:
 
 - environment ID, environment mode, and environment page or live desktop URL when available
 - app URL and exact commands that worked
-- evidence captured, such as screenshots, recordings, or artifact IDs
+- evidence captured — present the screenshot and screen recording as viewable links (and inline images where supported), not just artifact IDs or local paths the user has to find
 - secrets/files added without exposing values
 - resource warnings, if any
 - whether GitHub-backed setup would now save time
