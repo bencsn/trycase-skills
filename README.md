@@ -47,8 +47,7 @@ Environment size guide:
 | `nano` | 1 vCPU, 1 GiB RAM, 10 GiB disk | 2 GiB | Tiny scripts, static pages, simple frontends, docs/tools, and quick smoke checks. |
 | `small` | 1 vCPU, 2 GiB RAM, 20 GiB disk | 4 GiB | Lightweight Node/Python/Go apps, simple APIs, and modest dependency installs. |
 | `standard` | 2 vCPU, 4 GiB RAM, 40 GiB disk | 8 GiB | General unknown apps, normal web apps, Docker Compose, databases, moderate builds, and most desktop checks. |
-| `large` | 4 vCPU, 8 GiB RAM, 80 GiB disk | 16 GiB | Monorepos, heavier Compose stacks, JVM/Rails/native builds, larger test suites, and sizable artifacts. |
-| `xlarge` | 8 vCPU, 16 GiB RAM, 120 GiB disk | 24 GiB | Android/Gradle, big monorepos, and the largest supported Linux workloads. |
+| `large` | 4 vCPU, 8 GiB RAM, 80 GiB disk | 16 GiB | Monorepos, heavier Compose stacks, JVM/Rails/native builds, Android/Gradle, larger test suites, sizable artifacts, and the largest workloads currently supported. |
 
 ## Install
 

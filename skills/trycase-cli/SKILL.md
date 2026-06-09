@@ -60,10 +60,9 @@ Size guide:
 | `nano` | 1 vCPU, 1 GiB RAM, 10 GiB disk | 2 GiB | Tiny scripts, static sites, simple frontend checks, small docs/tools, or quick smoke tests with little install/build work. |
 | `small` | 1 vCPU, 2 GiB RAM, 20 GiB disk | 4 GiB | Small Node/Python/Go apps, lightweight package installs, simple APIs, and repos that are clearly too tight for 1 GiB RAM. |
 | `standard` | 2 vCPU, 4 GiB RAM, 40 GiB disk | 8 GiB | Unknown web apps, Next/Rails/PHP apps, moderate Rust/Go builds, Docker Compose, databases, and most visible desktop runs. |
-| `large` | 4 vCPU, 8 GiB RAM, 80 GiB disk | 16 GiB | Monorepos, heavier Docker Compose stacks, JVM/Rails/native builds, larger test suites, and workflows that produce sizable artifacts. |
-| `xlarge` | 8 vCPU, 16 GiB RAM, 120 GiB disk | 24 GiB | Largest supported Linux workloads, Android/Gradle builds, big monorepos, or cases that already exhausted `large`. |
+| `large` | 4 vCPU, 8 GiB RAM, 80 GiB disk | 16 GiB | Monorepos, heavier Docker Compose stacks, JVM/Rails/native builds, Android/Gradle builds, larger test suites, and the largest workloads currently supported. |
 
-If uncertain after inspection, choose `standard` for general app verification. Move down to `small` or `nano` only when the repository and workload are clearly lightweight; move up when Docker, JVM/Android, large monorepos, native compilation, or disk-heavy fixtures are present.
+`large` is currently the largest available size; requests above it are automatically capped to `large`. If uncertain after inspection, choose `standard` for general app verification. Move down to `small` or `nano` only when the repository and workload are clearly lightweight; move up to `large` when Docker, JVM/Android, large monorepos, native compilation, or disk-heavy fixtures are present.
 
 Do not use `--mode computer`; valid environment modes are `headless` and `desktop`. `trycase computer ...` is a command namespace for status and browser automation that works across supported environment modes. Use `trycase desktop ...` only for visible desktop commands.
 
@@ -201,7 +200,7 @@ trycase artifact bundle <env>
 
 Return the evidence, not just a claim. Include the environment ID, environment mode, environment page or live desktop URL when available, app URL, commands run, screenshots/recordings/artifacts captured, notable logs or browser console output, and resource warnings.
 
-Directory uploads are capped by selected environment size: nano 2 GiB, small 4 GiB, standard 8 GiB, large 16 GiB, xlarge 24 GiB uncompressed per upload. If an upload fails due size or disk pressure, recommend a larger size, fewer files, or `--respect-gitignore`.
+Directory uploads are capped by selected environment size: nano 2 GiB, small 4 GiB, standard 8 GiB, large 16 GiB uncompressed per upload. If an upload fails due size or disk pressure, recommend a larger size, fewer files, or `--respect-gitignore`.
 
 Always destroy environments when work is done:
 
