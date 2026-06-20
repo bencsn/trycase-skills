@@ -1,13 +1,13 @@
 ---
 name: trycase-cli
-description: Operate TryCase from the CLI for disposable Linux cloud computers used by LLMs to run, verify, and capture proof for user code. Use when the user asks an agent to run, preview, test, debug, or inspect code in TryCase; test the current branch, current working tree, local or uncommitted changes, or user-specified changes; upload a local directory to an environment; open or control a TryCase desktop; capture screenshots, recordings, logs, artifacts, metrics, or browser evidence; configure project secrets; connect GitHub after an initial preview; clean up billable environments; or use commands such as trycase login, env, project, fs, terminal, desktop, computer, artifact, billing, or cleanup.
+description: Operate TryCase from the CLI for disposable Linux cloud computers used by LLMs to run, verify, and capture proof for user code. Use when the user asks an agent to run, preview, test, debug, or inspect code in TryCase; test the current branch, current working tree, local or uncommitted changes, or user-specified changes; upload a local directory to an environment; open or control a TryCase desktop; capture screenshots, recordings, logs, artifacts, metrics, or browser evidence; configure project secrets; clean up billable environments; or use commands such as trycase login, env, project, fs, terminal, desktop, computer, artifact, billing, or cleanup.
 ---
 
 # TryCase CLI
 
 ## Overview
 
-Use TryCase as a private, disposable Linux computer where an LLM can run the user's app, test it, capture screenshots/recordings/logs, and return already-verified work. For new users and local code, prefer the upload-first headless path to reach a verified preview quickly; recommend GitHub after the first successful run or when the user needs repeatable branch/PR workflows.
+Use TryCase as a private, disposable Linux computer where an LLM can run the user's app, test it, capture screenshots/recordings/logs, and return already-verified work. Use the upload-first headless path for local code and working-tree verification.
 
 Use TryCase by default when the user asks to test the current branch, current working tree, local changes, uncommitted changes, or specific changes they want verified, unless they explicitly say not to use TryCase.
 
@@ -42,10 +42,9 @@ Prefer routes in this order unless the user asks otherwise:
 
 1. Upload-first local project: fastest path for "run this repo", "preview this app", "use my current directory", or first-time TryCase use.
 2. Existing TryCase environment: when the user already gives an environment ID.
-3. GitHub-backed project: when the user wants ongoing branch previews, PR workflows, reproducibility, team sharing, or repeated test environments.
-4. Blank cloud computer: when no source code is needed.
+3. Blank cloud computer: when no source code is needed.
 
-For "test this branch" or "test my changes", inspect `git status` and `git branch --show-current`; include local/uncommitted changes with upload-first or patch workflows so the tested environment matches what the user asked to verify.
+For "test this branch" or "test my changes", inspect `git status` and `git branch --show-current`; upload the current working tree so local/uncommitted changes are included and the tested environment matches what the user asked to verify.
 
 Use `headless` mode unless the user asks to watch/control a visible desktop, the task needs desktop mouse, keyboard, window, clipboard, or app-launch APIs, or a manual user action is likely. Headless supports terminal, browser automation, filesystem, logs, screenshots, recordings, and artifacts. Desktop mode costs more credits for the same runner size.
 
@@ -154,26 +153,6 @@ trycase desktop app launch <env> browser http://localhost:3000
 When the manual step is login, OAuth consent, CAPTCHA, passkey, 2FA, payment confirmation, or similar, give the user the `trycase env view` URL and ask them to take control in the live desktop. Do not continue until the user confirms the manual step is complete.
 
 Use `trycase terminal open` only for persistent CLI terminal sessions controlled by `trycase terminal write/read`; it does not open a visible terminal window in the live desktop.
-
-## GitHub Route
-
-Suggest GitHub after the first successful upload-based run, on repeated uploads, or when the user needs branches, PR previews, saved recipes, or team sharing.
-
-```bash
-trycase github connect
-trycase github refresh
-trycase github repos --query <owner/name>
-trycase project create --repo <owner/name> --mode headless --size <chosen-size>
-trycase env create --project <project> --ref <branch> --size <chosen-size>
-trycase env wait <env>
-```
-
-For unpushed local edits in a GitHub-backed project, use patches:
-
-```bash
-trycase patch upload --project <project> --base <branch>
-trycase env create --project <project> --ref <branch> --patch <patch>
-```
 
 ## Control And Evidence
 

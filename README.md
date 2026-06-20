@@ -10,7 +10,7 @@ These skills teach coding agents to:
   visible Linux computer or manual user action is needed
 - capture screenshots, recordings, logs, metrics, and artifacts
 - clean up billable environments when work is done
-- suggest GitHub-backed projects after the first successful upload-based run
+- keep source transfer on the upload-first route
 - choose an explicit environment size from the app's memory, CPU, disk, runtime,
   and build/test needs instead of assuming every headless run should use nano
 - hand off login, OAuth consent, CAPTCHA, passkey, 2FA/OTP, payment

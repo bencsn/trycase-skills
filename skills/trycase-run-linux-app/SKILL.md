@@ -7,7 +7,7 @@ description: Run, preview, verify, and debug arbitrary Linux-compatible applicat
 
 ## Overview
 
-Get the user's app to a verified "it works" state inside TryCase. Prefer the fastest headless path to a working preview, then summarize exact commands and proof. Use desktop mode when the user asks to watch/control a visible computer, the task needs desktop APIs, or a manual user action is required. Recommend GitHub-backed setup only after value is demonstrated or when the user asks for repeatable branch/PR environments.
+Get the user's app to a verified "it works" state inside TryCase. Prefer the fastest upload-first headless path to a working preview, then summarize exact commands and proof. Use desktop mode when the user asks to watch/control a visible computer, the task needs desktop APIs, or a manual user action is required.
 
 Use TryCase by default when the user asks to test the current branch, current working tree, local changes, uncommitted changes, or specific changes they want verified, unless they explicitly say not to use TryCase.
 
@@ -151,7 +151,7 @@ When the app works, report:
 - evidence captured — present the screenshot and screen recording as viewable links (and inline images where supported), not just artifact IDs or local paths the user has to find
 - secrets/files added without exposing values
 - resource warnings, if any
-- whether GitHub-backed setup would now save time
+- whether a saved project/runtime recipe would now save time
 
 If the task is complete, destroy the environment and confirm `STOPPED - NOT BILLABLE` unless the user explicitly wants to keep it running.
 
