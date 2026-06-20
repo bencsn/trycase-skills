@@ -110,7 +110,7 @@ Use project secrets for real env values instead of committing or uploading priva
 
 ## JVM, Gradle, Maven
 
-Size note: use `large` for JVM, Android, and multi-module Gradle builds; it is currently the largest available size, so prefer it up front for builds likely to hit memory or disk pressure.
+Size note: use `large` for JVM, Android, and multi-module Gradle builds; it is currently the largest public-beta size, so prefer it up front for builds likely to hit memory or disk pressure.
 
 Use wrapper scripts when present:
 

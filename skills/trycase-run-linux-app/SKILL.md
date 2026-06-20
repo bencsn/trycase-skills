@@ -44,9 +44,8 @@ Size guide:
 | `small` | 1 vCPU, 2 GiB RAM, 20 GiB disk | 4 GiB | Lightweight Node/Python/Go apps, simple APIs, modest package installs, and tasks where 1 GiB RAM is likely tight. |
 | `standard` | 2 vCPU, 4 GiB RAM, 40 GiB disk | 8 GiB | General unknown apps, Next.js/Vite apps with normal installs, Rails/PHP apps, moderate Go/Rust builds, Docker Compose, databases, and most desktop-mode checks. |
 | `large` | 4 vCPU, 8 GiB RAM, 80 GiB disk | 16 GiB | Monorepos, heavier Compose stacks, JVM/Rails/native builds, larger test suites, and disk-heavy fixtures or artifacts. |
-| `xlarge` | 8 vCPU, 16 GiB RAM, 120 GiB disk | 24 GiB | Largest supported Linux workloads, Android/Gradle builds, big monorepos, or work that already exhausted `large`. |
 
-If inspection is inconclusive, use `standard` for general app verification. Choose `nano` or `small` only when the codebase is plainly lightweight. Choose `large` or `xlarge` up front for Docker-heavy, JVM/Android, monorepo, native compilation, or disk-heavy work to avoid failed retries and wasted time.
+If inspection is inconclusive, use `standard` for general app verification. Choose `nano` or `small` only when the codebase is plainly lightweight. Choose `large` up front for Docker-heavy, JVM/Android, monorepo, native compilation, or disk-heavy work to avoid failed retries and wasted time. `large` is currently the largest public-beta size.
 
 ## Operating Loop
 
