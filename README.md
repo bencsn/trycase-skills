@@ -1,82 +1,31 @@
-# TryCase Agent Skills
+# TryCase Agent Skill
 
-Universal Agent Skills for using TryCase as a disposable test environment for LLMs.
+Agent guidance for the current TryCase CLI: launch and monitor end-to-end verification agents for connected GitHub pull requests, stream issues and verdicts while work continues, send follow-ups, and inspect saved results and proof.
 
-These skills teach coding agents to:
-
-- upload local code into a private TryCase environment
-- run and debug Linux-compatible apps
-- verify apps in headless browser mode by default and use desktop mode when a
-  visible Linux computer or manual user action is needed
-- capture screenshots, recordings, logs, metrics, and artifacts
-- clean up billable environments when work is done
-- keep source transfer on the upload-first route
-- choose an explicit environment size from the app's memory, CPU, disk, runtime,
-  and build/test needs instead of assuming every headless run should use nano
-- hand off login, OAuth consent, CAPTCHA, passkey, 2FA/OTP, payment
-  confirmation, account creation, and other human-only steps through a live
-  desktop take-control link instead of asking for sensitive values in chat
-
-CLI vocabulary the skills follow:
-
-- `--mode headless` is the default route for agent verification.
-- `--mode desktop` is for visible desktop control, desktop APIs, or manual user
-  action.
-- There is no `--mode computer`; `trycase computer ...` is a command namespace
-  for status and browser automation.
-
-Manual action handoff:
-
-```bash
-trycase env create --project <project> --mode desktop --size <chosen-size>
-trycase env wait <env>
-trycase desktop app launch <env> browser http://localhost:3000
-trycase env view <env> --no-open
-```
-
-Agents should give the user the environment page URL, ask them to use the live
-desktop "take control" interaction, pause until the user confirms the step is
-complete, then resume verification in the same desktop environment. Agents
-should not ask users to paste passwords, OTPs, or CAPTCHA answers into chat or
-try to bypass anti-abuse checks.
-
-Environment size guide:
-
-| Size | Resources | Upload cap | Good fit |
-| --- | --- | --- | --- |
-| `nano` | 1 vCPU, 1 GiB RAM, 10 GiB disk | 2 GiB | Tiny scripts, static pages, simple frontends, docs/tools, and quick smoke checks. |
-| `small` | 1 vCPU, 2 GiB RAM, 20 GiB disk | 4 GiB | Lightweight Node/Python/Go apps, simple APIs, and modest dependency installs. |
-| `standard` | 2 vCPU, 4 GiB RAM, 40 GiB disk | 8 GiB | General unknown apps, normal web apps, Docker Compose, databases, moderate builds, and most desktop checks. |
-| `large` | 4 vCPU, 8 GiB RAM, 80 GiB disk | 16 GiB | Monorepos, heavier Compose stacks, JVM/Rails/native builds, larger tests, and the largest public-beta workloads currently available. |
-
-`large` is currently the largest public-beta size. Choose it up front for Android/Gradle, big monorepos, native builds, or work likely to hit memory or disk pressure.
+The previous environment-oriented TryCase product has been retired. This repository no longer teaches `env`, `project`, `fs`, `terminal`, `desktop`, `computer`, worker, upload, machine-size, or cloud-computer workflows.
 
 ## Install
 
-For any agent that supports the `skills` CLI:
-
 ```bash
-npx skills add bencsn/trycase-skills --skill trycase-cli --skill trycase-run-linux-app -g
+npx skills add bencsn/trycase-skills --skill trycase-cli -g
 ```
 
-Already installed? Update them with:
+Update an existing installation:
 
 ```bash
-npx skills update -g trycase-cli trycase-run-linux-app
+npx skills update -g trycase-cli
 ```
 
-The skills also tell agents to best-effort refresh the installed TryCase skills at the start of each TryCase task.
-
-List available skills:
+Remove the obsolete skill if it was previously installed:
 
 ```bash
-npx skills add bencsn/trycase-skills --list
+npx skills remove -g trycase-run-linux-app
 ```
 
 ## Use
 
-After installing, ask your agent:
-
 ```text
-Use $trycase-run-linux-app to run this repo in TryCase and return screenshots, recordings, logs, and cleanup status.
+Use $trycase-cli to verify this pull request, surface supported issues and verdicts as they become available, validate continuously with parallel subagents where useful, and keep the overall in-progress versus finished status explicit.
 ```
+
+The CLI is self-describing. Agents should run `trycase capabilities` before relying on remembered syntax.

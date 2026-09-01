@@ -1,4 +1,4 @@
 interface:
   display_name: "TryCase CLI"
-  short_description: "Test local changes in TryCase cloud computers"
-  default_prompt: "Use $trycase-cli to test this current branch or local working tree in TryCase with screenshots and recordings."
+  short_description: "Run and follow GitHub PR verification agents"
+  default_prompt: "Use $trycase-cli to verify this pull request, surface issues and verdicts continuously, and clearly distinguish provisional results from final completion."
